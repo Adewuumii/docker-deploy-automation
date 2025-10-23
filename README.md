@@ -1,6 +1,6 @@
 # Docker Deployment Automation
 
-A comprehensive Bash script that automates the deployment of Dockerized applications to remote servers with Nginx reverse proxy configuration.
+This is a Bash script that automates the deployment of Dockerized applications to remote servers with Nginx reverse proxy configuration.
 
 ## Features
 
@@ -46,11 +46,6 @@ cd docker-deploy-automation
 chmod +x deploy.sh
 ```
 
-3. **Ensure your SSH key has proper permissions**:
-```bash
-chmod 600 ~/.ssh/your_private_key
-```
-
 ## Usage
 
 ### Basic Deployment
@@ -86,19 +81,6 @@ The script will prompt you for the following information:
    - SSH Key Path: Path to your private key (e.g., `~/.ssh/id_rsa`)
    - Application Port: The internal port your app runs on (e.g., `3000`, `8080`)
 
-### Cleanup Mode
-
-To remove the deployed application and cleanup resources:
-
-```bash
-./deploy.sh --cleanup
-```
-
-This will:
-- Stop and remove Docker containers
-- Remove Nginx configuration
-- Prune unused Docker networks
-- Reload Nginx
 
 ## How It Works
 
@@ -204,75 +186,13 @@ cat deploy_$(date '+%Y%m%d').log
 ssh user@server 'cat ~/deploy_$(date '+%Y%m%d').log'
 ```
 
-## Troubleshooting
-
-### Common Issues and Solutions
-
-#### 1. SSH Connection Failed
-```
-Error: SSH connection failed. Exiting...
-```
-**Solutions:**
-- Verify SSH key path is correct
-- Ensure key has proper permissions: `chmod 600 ~/.ssh/key`
-- Check server IP address and username
-- Verify server's SSH port is open (default: 22)
-
-#### 2. Docker Build Failed
-```
-ERROR: Docker build failed!
-```
-**Solutions:**
-- Check Dockerfile syntax
-- Ensure all required files are in the repository
-- Verify base image is accessible
-- Check remote server has enough disk space: `df -h`
-
-#### 3. Port Already in Use
-```
-Error: bind: address already in use
-```
-**Solutions:**
-- Run cleanup mode: `./deploy.sh --cleanup`
-- Manually stop conflicting containers: `docker stop $(docker ps -aq)`
-- Choose a different port for your application
-
-#### 4. Nginx Configuration Test Failed
-```
-nginx: configuration file /etc/nginx/nginx.conf test failed
-```
-**Solutions:**
-- Check for syntax errors in generated config
-- Remove conflicting configurations:
-  ```bash
-  sudo rm /etc/nginx/sites-enabled/default
-  sudo nginx -t
-  ```
-
-#### 5. Application Not Reachable
-```
-curl: (56) Recv failure: Connection reset by peer
-```
-**Solutions:**
-- Wait a few seconds for container to fully start
-- Check container logs: `docker logs myapp`
-- Verify application is listening on correct port
-- Check security group/firewall rules allow port 80
-
-## 🚦 Testing Your Deployment
+## Testing Your Deployment
 
 After deployment completes, test your application:
 
 ### From Local Machine
 ```bash
-# Simple test
 curl http://YOUR_SERVER_IP
-
-# Check headers
-curl -I http://YOUR_SERVER_IP
-
-# Detailed response
-curl -v http://YOUR_SERVER_IP
 ```
 
 ### From Browser
